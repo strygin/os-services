@@ -14,9 +14,7 @@ nvidia-drivers:
   - GRID_BUILD
   - NVIDIA_DRIVER_VERSION
   volumes:
-  # Dude! This is ugly! We need to make /usr/local shared in a future release!
-  - /mnt/nvidia:/usr/local/nvidia
-  # ^^^^^^^^^^^
+  - /usr/local/nvidia:/usr/local/nvidia
   - /lib/modules:/lib/modules
   - /usr/src:/usr/src
   - /usr/bin/ros:/usr/bin/ros

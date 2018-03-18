@@ -1,5 +1,5 @@
 FROM gcc:7.3
-# FROM arm64=arm64v8/gcc:7.3 arm=arm32v7/gcc:7.3
+# FROM arm64=skip arm=skip
 
 LABEL maintainer="Dmitry Strygin <strygin@gmail.com>"
 
