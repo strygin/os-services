@@ -15,7 +15,7 @@ fi
 mkdir -p /usr/src/linux
 echo "Fetching and extracting source..."
 curl -SsL https://github.com/rancher/os-kernel/releases/download/v${KERNEL_VERSION}/linux-${KERNEL_VERSION}-src.tgz | tar -zx --strip-components=1 -C /usr/src/linux
-ln -s /usr/src/linux /lib/modules/${KERNEL_VERSION}/build
+ln -snf /usr/src/linux /lib/modules/${KERNEL_VERSION}/build
 cd /usr/src/linux
 zcat /proc/config.gz > ./.config
 
