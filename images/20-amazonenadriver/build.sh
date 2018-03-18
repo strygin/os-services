@@ -14,14 +14,15 @@ if [ -e $STAMP ]; then
 fi
 
 ros service enable kernel-source
-ros service up kernel-source
+ros service up kernel-source --foreground
 
 ENA_BUILD_DIR=/dist/aws-ena
 
 echo "Compiling ena driver"
 cd ${ENA_BUILD_DIR}/kernel/linux/ena/
 make -j$(nproc)
-cp ena.ko /lib/modules/${KERNEL_VERSION}/
+mkdir -p /lib/modules/${KERNEL_VERSION}/kernel/drivers/net/ethernet/amazon/ena/
+cp ena.ko /lib/modules/${KERNEL_VERSION}/kernel/drivers/net/ethernet/amazon/ena/
 depmod
 
 cd /dist

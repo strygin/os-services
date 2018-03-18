@@ -13,6 +13,7 @@ RUN apt-get update \
     curl \
     build-essential \
     autoconf \
+    kmod \
     libtool \
     libelf-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
