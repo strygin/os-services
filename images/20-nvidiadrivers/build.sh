@@ -2,6 +2,8 @@
 set -ex
 
 NVIDIA_DRIVER_VERSION=${NVIDIA_DRIVER_VERSION:-384.111}
+# A temp bug workaround -- `ros config set ...` strips trailing zeros if thing looks like a float
+[[ $NVIDIA_DRIVER_VERSION == 390.3 ]] && NVIDIA_DRIVER_VERSION="390.30"
 
 KERNEL_VERSION=$(uname -r)
 
