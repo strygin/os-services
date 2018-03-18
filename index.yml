@@ -6,6 +6,7 @@ services:
 - kernel-extras
 - kernel-headers
 - kernel-headers-system-docker
+- kernel-source
 - open-vm-tools
 - rancher-server
 - rancher-server-stable

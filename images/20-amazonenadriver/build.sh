@@ -1,7 +1,6 @@
 #!/bin/sh
 set -ex
 
-
 KERNEL_VERSION=$(uname -r)
 echo "aws-ena for ${KERNEL_VERSION}"
 
@@ -14,21 +13,14 @@ if [ -e $STAMP ]; then
     exit 0
 fi
 
-ros service enable kernel-headers
-ros service up kernel-headers
+ros service enable kernel-source
+ros service up kernel-source
 
-ENA_TAR=ena_linux_${ENA_VERSION}.tar.gz
-ENA_URL=https://github.com/amzn/amzn-drivers/archive/${ENA_TAR}
-ENA_BUILD_DIR=$(mktemp -d -p .)
-
-echo "Downloading ${ENA_URL} to ${ENA_TAR}"
-curl -sL ${ENA_URL} -o ${ENA_TAR}
-echo "Extracting ${ENA_TAR} to ${ENA_BUILD_DIR}"
-tar xf ${ENA_TAR} -C ${ENA_BUILD_DIR} --strip-components=1
+ENA_BUILD_DIR=/dist/aws-ena
 
 echo "Compiling ena driver"
 cd ${ENA_BUILD_DIR}/kernel/linux/ena/
-make
+make -j$(nproc)
 cp ena.ko /lib/modules/${KERNEL_VERSION}/
 depmod
 
@@ -37,8 +29,10 @@ touch $STAMP
 echo "aws-ena for ${KERNEL_VERSION} installed. Delete $STAMP to reinstall"
 
 echo "Cleaning ena code"
-rm -rf ${ENA_TAR} && rm -rf ${ENA_BUILD_DIR}
+rm -rf ${ENA_BUILD_DIR}
 
-echo "Cleaning kernel headers"
-ros service disable kernel-headers
-rm -rf /lib/modules/${KERNEL_VERSION}/build/ && rm -f /lib/modules/${KERNEL_VERSION}/.headers-done
+echo "Cleaning kernel source"
+ros service disable kernel-source
+rm -rf /lib/modules/${KERNEL_VERSION}/build
+rm -rf /usr/src/linux
+rm -f /lib/modules/${KERNEL_VERSION}/.kernel-source-done

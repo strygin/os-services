@@ -13,8 +13,8 @@ amazon-ena-driver:
   - NO_PROXY
   volumes:
   - /usr/src:/usr/src
-#  - /lib/modules:/lib/modules
-#  - /usr/bin/ros:/usr/bin/ros
+  - /lib/modules:/lib/modules
+  - /usr/bin/ros:/usr/bin/ros
   volumes_from:
   - all-volumes
   pid: host
