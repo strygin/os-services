@@ -10,7 +10,7 @@ echo "Nvidia drivers ${NVIDIA_DRIVER_VERSION} for ${KERNEL_VERSION}"
 STAMP=/lib/modules/${KERNEL_VERSION}/.nvidia-drivers-done
 
 if [ -e $STAMP ]; then
-    echo "Nvidia drivers for ${KERNEL_VERSION} already installed. Delete $STAMP to reinstall"
+    echo "Nvidia drivers for ${KERNEL_VERSION} are already installed. Delete $STAMP to reinstall"
     exit 0
 fi
 
@@ -25,7 +25,6 @@ echo "Environment:"
 env
 
 echo "Compiling Nvidia drivers"
-
 ./nvidia.run \
     --accept-license \
     --no-questions \
@@ -41,7 +40,7 @@ echo "Compiling Nvidia drivers"
     --kernel-source-path=/usr/src/linux
 
 touch $STAMP
-echo "Nvidia drivers ${NVIDIA_DRIVER_VERSION} for ${KERNEL_VERSION} installed. Delete $STAMP to reinstall"
+echo "Nvidia drivers ${NVIDIA_DRIVER_VERSION} for ${KERNEL_VERSION} are installed. Delete $STAMP to reinstall"
 
 echo "Cleaning code"
 rm -rf /dist

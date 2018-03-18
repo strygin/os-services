@@ -9,7 +9,7 @@ STAMP=/lib/modules/${KERNEL_VERSION}/.aws-ena-done
 if [ -e $STAMP ]; then
     modprobe ena
 
-    echo "aws-ena for ${KERNEL_VERSION} already installed. Delete $STAMP to reinstall"
+    echo "aws-ena for ${KERNEL_VERSION} is already installed. Delete $STAMP to reinstall"
     exit 0
 fi
 
@@ -27,7 +27,7 @@ depmod
 
 cd /dist
 touch $STAMP
-echo "aws-ena for ${KERNEL_VERSION} installed. Delete $STAMP to reinstall"
+echo "aws-ena for ${KERNEL_VERSION} is installed. Delete $STAMP to reinstall"
 
 echo "Cleaning ena code"
 rm -rf ${ENA_BUILD_DIR}
