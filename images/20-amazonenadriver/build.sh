@@ -1,10 +1,11 @@
-#!/bin/sh
-set -ex
+#!/bin/bash
+set -e
 
 KERNEL_VERSION=$(uname -r)
 echo "aws-ena for ${KERNEL_VERSION}"
 
 STAMP=/lib/modules/${KERNEL_VERSION}/.aws-ena-done
+KERNEL_SOURCE_STAMP=/lib/modules/${KERNEL_VERSION}/.kernel-source-done
 
 if [ -e $STAMP ]; then
     modprobe ena
@@ -13,8 +14,13 @@ if [ -e $STAMP ]; then
     exit 0
 fi
 
-ros service enable kernel-source
-ros service up kernel-source --foreground
+if [ -e $KERNEL_SOURCE_STAMP ]; then
+    CLEAN_KERNEL_SOURCE=false
+else
+    ros service enable kernel-source
+    ros service up kernel-source --foreground
+    CLEAN_KERNEL_SOURCE=true
+fi
 
 ENA_BUILD_DIR=/dist/aws-ena
 
@@ -32,8 +38,10 @@ echo "aws-ena for ${KERNEL_VERSION} is installed. Delete $STAMP to reinstall"
 echo "Cleaning ena code"
 rm -rf ${ENA_BUILD_DIR}
 
-echo "Cleaning kernel source"
-ros service disable kernel-source
-rm -rf /lib/modules/${KERNEL_VERSION}/build
-rm -rf /usr/src/linux
-rm -f /lib/modules/${KERNEL_VERSION}/.kernel-source-done
+if [[ $CLEAN_KERNEL_SOURCE == true ]]; then
+    echo "Cleaning kernel source"
+    ros service disable kernel-source
+    rm -rf /lib/modules/${KERNEL_VERSION}/build
+    rm -rf /usr/src/linux
+    rm -f /lib/modules/${KERNEL_VERSION}/.kernel-source-done
+fi

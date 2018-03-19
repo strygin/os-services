@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 NVIDIA_DRIVER_VERSION=${NVIDIA_DRIVER_VERSION:-384.111}
