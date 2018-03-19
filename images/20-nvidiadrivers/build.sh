@@ -1,5 +1,5 @@
 #!/bin/sh
-set -ex
+set -e
 
 NVIDIA_DRIVER_VERSION=${NVIDIA_DRIVER_VERSION:-384.111}
 # A temp bug workaround -- `ros config set ...` strips trailing zeros if thing looks like a float
@@ -9,6 +9,7 @@ KERNEL_VERSION=$(uname -r)
 
 echo "Nvidia drivers ${NVIDIA_DRIVER_VERSION} for ${KERNEL_VERSION}"
 
+KERNEL_SOURCE_STAMP=/lib/modules/${KERNEL_VERSION}/.kernel-source-done
 STAMP=/lib/modules/${KERNEL_VERSION}/.nvidia-drivers-done
 
 if [ -e $STAMP ]; then
@@ -16,8 +17,13 @@ if [ -e $STAMP ]; then
     exit 0
 fi
 
-ros service enable kernel-source
-ros service up kernel-source --foreground
+if [ -e $KERNEL_SOURCE_STAMP ]; then
+    CLEAN_KERNEL_SOURCE=false
+else
+    ros service enable kernel-source
+    ros service up kernel-source --foreground
+    CLEAN_KERNEL_SOURCE=true
+fi
 
 echo "Downloading Nvidia drivers"
 curl http://us.download.nvidia.com/tesla/${NVIDIA_DRIVER_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run -Lvo nvidia.run
@@ -47,8 +53,10 @@ echo "Nvidia drivers ${NVIDIA_DRIVER_VERSION} for ${KERNEL_VERSION} are installe
 echo "Cleaning code"
 rm -rf /dist
 
-echo "Cleaning kernel source"
-ros service disable kernel-source
-rm -rf /lib/modules/${KERNEL_VERSION}/build
-rm -rf /usr/src/linux
-rm -f /lib/modules/${KERNEL_VERSION}/.kernel-source-done
+if [[ $CLEAN_KERNEL_SOURCE == true ]]; then
+    echo "Cleaning kernel source"
+    ros service disable kernel-source
+    rm -rf /lib/modules/${KERNEL_VERSION}/build
+    rm -rf /usr/src/linux
+    rm -f /lib/modules/${KERNEL_VERSION}/.kernel-source-done
+fi

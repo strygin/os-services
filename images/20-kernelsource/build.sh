@@ -1,5 +1,5 @@
 #!/bin/bash
-set +ex
+set +e
 
 KERNEL_VERSION=$(uname -r)
 echo "Kernel source ${KERNEL_VERSION}"
