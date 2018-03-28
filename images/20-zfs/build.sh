@@ -31,7 +31,7 @@ ros service up kernel-headers-system-docker
 
 
 # get the zfs source as per https://github.com/zfsonlinux/zfs/wiki/Building-ZFS
-VERSION="0.7.5"
+VERSION="0.7.7"
 curl -sL https://github.com/zfsonlinux/zfs/releases/download/zfs-${VERSION}/spl-${VERSION}.tar.gz > spl-${VERSION}.tar.gz
 curl -sL https://github.com/zfsonlinux/zfs/releases/download/zfs-${VERSION}/zfs-${VERSION}.tar.gz > zfs-${VERSION}.tar.gz
 mkdir -p spl
@@ -121,7 +121,7 @@ done
 for i in $(ls arch/sbin); do
    echo "system-docker cp wonka.sh \${1}:/sbin/$i" >> /dist/arch/setup_wonka.sh
 done
-system-docker build -t zfs-tools arch/
+system-docker build --network=host -t zfs-tools arch/
 
 modprobe zfs
 
